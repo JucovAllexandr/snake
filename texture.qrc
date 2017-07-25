@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/texture/snake/red">
+        <file>redBodyStraight.png</file>
+        <file>redBodyTurn.png</file>
+        <file>redHeadStaight.png</file>
+        <file>redHeadTurn.png</file>
+        <file>redTail.png</file>
+        <file>redTongue.png</file>
+    </qresource>
+</RCC>
