@@ -10,6 +10,7 @@
 #include <vector>
 #include <QOpenGLWidget>
 #include <QTimer>
+#include <QTime>
 
 class Widget : public QOpenGLWidget
 {
@@ -22,6 +23,8 @@ public:
 private:
   GLuint textureID[5];
   int w,h;
+  int frameCount;
+  float fps;
   float step;
   int key,lastKey;
   QTimer *tm;
@@ -35,6 +38,7 @@ private:
   QPointF LB, RB, LT, RT;
   QTimer *eatTime;
   QTimer *mainLoop;
+  QTime frameTime;
   bool isEat();
   bool isCollide();
   void drawGrid();

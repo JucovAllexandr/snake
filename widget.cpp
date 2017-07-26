@@ -87,6 +87,8 @@ void Widget::drawGrid()
         {
             glBegin(GL_POINTS);
             glVertex2f(grid[i][j].x(), grid[i][j].y());
+            glVertex2f(grid[i][j].x()+step, grid[i][j].y());
+            glVertex2f(grid[i][j].x()+step, grid[i][j].y()+step);
             glEnd();
         }
 }
@@ -440,6 +442,8 @@ void Widget::initializeGL()
     glMatrixMode(GL_PROJECTION);
     glClearColor(0,1.,0,0);
     glLoadIdentity();
+    frameTime.start();
+    frameCount = 0;
 }
 
 void Widget::paintGL()
@@ -452,6 +456,24 @@ void Widget::paintGL()
     drawEat();
     drawPoints();
     glFlush();
+
+
+    QString framesPerSecond;
+        framesPerSecond.setNum(frameCount /(frameTime.elapsed() / 1000.0), 'f', 2);
+
+
+    QPainter p(this);
+    p.setPen(Qt::black);
+    p.setFont(QFont("Helvetica", 12));
+    p.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+    p.drawText(0,20,w,h,0,"FPS: "+framesPerSecond);
+    p.end();
+
+    if (!(frameCount % 100)) {
+            frameTime.start();
+            frameCount = 0;
+        }
+     frameCount++;
 }
 
 void Widget::resizeGL(int w, int h)
