@@ -446,7 +446,7 @@ void Widget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
-
+    glOrtho(-w/(float)h,w/(float)h,-1.,1.,-1.,1.);
     drawGrid();
     drawSnake();
     drawEat();
@@ -458,7 +458,8 @@ void Widget::resizeGL(int w, int h)
 {
     this->w = w;
     this->h = h;
-    glViewport(0, 0, w, h);
+    glMatrixMode(GL_MODELVIEW);
+    glOrtho(-2,2,-2.,2.,-2.,2.);
 }
 
 void Widget::keyPressEvent(QKeyEvent *key)
