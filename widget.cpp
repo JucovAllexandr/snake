@@ -11,7 +11,7 @@ Widget::Widget(QOpenGLWidget *parent)
     w = this->width();
     h = this->height();
     lastKey = key = 4;
-    step = 2. / SZ_GRID;
+    step = (2. / SZ_GRID);
     addTail = false;
     turnHead = false;
     float tx,ty = 1;
@@ -80,22 +80,45 @@ bool Widget::isCollide()
 
 void Widget::drawGrid()
 {
-    glColor3f(1.,0,0);
+
     glPointSize(2);
+    //glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, textureID[5]);
+    turnLeft();
     for(int i = 0;i < SZ_GRID;i++)
         for(int j = 0;j < SZ_GRID;j++)
         {
-            glBegin(GL_POINTS);
-            glVertex2f(grid[i][j].x(), grid[i][j].y());
-            glVertex2f(grid[i][j].x()+step, grid[i][j].y());
-            glVertex2f(grid[i][j].x()+step, grid[i][j].y()+step);
+
+//            glBegin(GL_QUADS);
+//            glColor3f(1.,1,0);
+//            if(i==0 || j==0 || i == SZ_GRID-1 || j==SZ_GRID-1)
+//                glColor3f(1.,1.,1);
+//            glVertex2f(grid[i][j].x(), grid[i][j].y());
+//            glVertex2f(grid[i][j].x()+step, grid[i][j].y());
+//            glVertex2f(grid[i][j].x()+step, grid[i][j].y()-step);
+//            glVertex2f(grid[i][j].x(), grid[i][j].y()-step);
+//            glEnd();
+//            glBegin(GL_QUADS);
+//            glTexCoord2f(LT.x(), LT.y()); glVertex2f(grid[i][j].x(), grid[i][j].y());
+//            glTexCoord2f(RT.x(), RT.y()); glVertex2f(grid[i][j].x()+step, grid[i][j].y());
+//            glTexCoord2f(RB.x(), RB.y()); glVertex2f(grid[i][j].x()+step, grid[i][j].y()-step);
+//            glTexCoord2f(LB.x(), LB.y()); glVertex2f(grid[i][j].x(), grid[i][j].y()-step);
+//            glEnd();
+            glBegin(GL_QUADS);
+            glTexCoord2f(LT.x(), LT.y()); glVertex2f(-1, -1);
+            glTexCoord2f(RT.x(), RT.y()); glVertex2f(1, -1);
+            glTexCoord2f(RB.x(), RB.y()); glVertex2f(1, 1);
+            glTexCoord2f(LB.x(), LB.y()); glVertex2f(-1, 1);
             glEnd();
+
         }
+   // glDisable(GL_TEXTURE_2D);
 }
 
 void Widget::drawSnake()
 {
     glEnable(GL_TEXTURE_2D);
+    drawGrid();
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0.0f);
 
@@ -376,10 +399,10 @@ void Widget::turnBottom()
 
 void Widget::genTexture()
 {
-    QImage tex1, tex2, tex3, tex4, tex5;
+    QImage tex1, tex2, tex3, tex4, tex5, tex6;
     tex1.load(":/texture/snake/red/redHeadStaight.png");
     tex1 = QGLWidget::convertToGLFormat(tex1);
-    glGenTextures(2,textureID);
+    glGenTextures(6,textureID);
     glBindTexture(GL_TEXTURE_2D,textureID[0]);
     glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,tex1.width(),tex1.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,tex1.bits());
 
@@ -432,6 +455,17 @@ void Widget::genTexture()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+    tex6.load(":/texture/ground/ground3.jpg");
+    tex6 = QGLWidget::convertToGLFormat(tex6);
+    glBindTexture(GL_TEXTURE_2D,textureID[5]);
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,tex6.width(),tex6.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,tex6.bits());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
 }
 
 
@@ -451,7 +485,7 @@ void Widget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
     glOrtho(-w/(float)h,w/(float)h,-1.,1.,-1.,1.);
-    drawGrid();
+    //drawGrid();
     drawSnake();
     drawEat();
     drawPoints();
@@ -481,7 +515,7 @@ void Widget::resizeGL(int w, int h)
     this->w = w;
     this->h = h;
     glMatrixMode(GL_MODELVIEW);
-    glOrtho(-2,2,-2.,2.,-2.,2.);
+    glOrtho(-1,1,-1.,1.,-1.,1.);
 }
 
 void Widget::keyPressEvent(QKeyEvent *key)

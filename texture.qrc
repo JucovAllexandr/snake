@@ -7,4 +7,7 @@
         <file>redTail.png</file>
         <file>redTongue.png</file>
     </qresource>
+    <qresource prefix="/texture/ground">
+        <file>ground3.jpg</file>
+    </qresource>
 </RCC>

@@ -4,8 +4,6 @@
 #define SZ_GRID 16
 #define ST_SNK_SIZE 4
 #define ST_SNAKE_SPEED 350
-#define SCALE_SNK_X 0
-#define SCALE_SNK_Y 0
 #include <QWidget>
 #include <vector>
 #include <QOpenGLWidget>
@@ -21,7 +19,7 @@ public:
     ~Widget();
 
 private:
-  GLuint textureID[5];
+  GLuint textureID[7];
   int w,h;
   int frameCount;
   float fps;
