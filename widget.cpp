@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QImage>
 #include <QGLWidget>
+#include <QGLFunctions>
 #include <math.h>
 using namespace std;
 Widget::Widget(QOpenGLWidget *parent)
@@ -460,8 +461,9 @@ void Widget::genTexture()
     tex6 = QGLWidget::convertToGLFormat(tex6);
     glBindTexture(GL_TEXTURE_2D,textureID[5]);
     glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,tex6.width(),tex6.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,tex6.bits());
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
@@ -471,13 +473,14 @@ void Widget::genTexture()
 
 void Widget::initializeGL()
 {
-
+    initializeGLFunctions();
     genTexture();
     glMatrixMode(GL_PROJECTION);
     glClearColor(0,1.,0,0);
     glLoadIdentity();
     frameTime.start();
     frameCount = 0;
+
 }
 
 void Widget::paintGL()

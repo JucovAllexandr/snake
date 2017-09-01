@@ -9,8 +9,9 @@
 #include <QOpenGLWidget>
 #include <QTimer>
 #include <QTime>
+#include <QGLFunctions>
 
-class Widget : public QOpenGLWidget
+class Widget : public QOpenGLWidget, protected QGLFunctions
 {
     Q_OBJECT
 
